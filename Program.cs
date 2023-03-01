@@ -3,95 +3,92 @@ using System.Collections.Generic;
 
 public class Hangman
 {
+    const int GUESS_LIMIT = 15;
     public static void Main(string[] args)
     {
         var words = new List<string> { "skyline", "cupboard", "newsweek", "monkeyface", "hurricane", "dogfood", "forest", "waterpipe" };
+        Random random = new Random();
 
-        Random R = new Random();
-        int randomNumber = R.Next(0, words.Count);
+        List<char> guessedLetters = new List<char>();
 
-        string randomWord = words[randomNumber];
-
-        List<string> guessedLetters = new List<string>();
-
-        int guessLimit = 15;
-        Console.WriteLine($"This is a hangman game \nTry to guess the word by entering a letter. You have {guessLimit} guesses.\n");
-
-        Console.Write($"the word is {randomWord.Length} letters long:\n\n");
-        for (int k = 0; k < randomWord.Length; k++)
+        while (true)
         {
-            Console.Write("_");
-        }
-        Console.WriteLine("\n\n");
+            int randomNumber = random.Next(words.Count);
+            string randomWord = words[randomNumber];
 
-        int i = 0;
-        while (i < guessLimit)
-        {
-            string letterGuess = Console.ReadLine().ToLower();
-
-            if (letterGuess.Length != 1 || !Char.IsLetter(letterGuess[0]))
+            Console.WriteLine($"This is a hangman game.\nTry to guess the word by entering a letter. You have {GUESS_LIMIT} guesses.\n");
+            Console.Write($"The word is {randomWord.Length} letters long:\n\n");
+            for (int k = 0; k < randomWord.Length; k++)
             {
-                Console.WriteLine("Please enter a single letter.");
-                continue;
+                Console.Write("_");
             }
+            Console.WriteLine("\n\n");
 
-            if (guessedLetters.Contains(letterGuess))
+            int counter = 0;
+            while (counter < GUESS_LIMIT)
             {
-                Console.WriteLine($"You already guessed the letter '{letterGuess}'.");
-                continue;
-            }
+                char letterGuess = Console.ReadKey().KeyChar;
 
-            guessedLetters.Add(letterGuess);
-
-            bool containsLetter = randomWord.Contains(letterGuess);
-
-            if (containsLetter)
-            {
-                Console.WriteLine($"The letter '{letterGuess}' is in the word!");
-
-                bool guessedWholeWord = true;
-                foreach (char ch in randomWord)
+                if (guessedLetters.Contains(letterGuess))
                 {
-                    if (guessedLetters.Contains(ch.ToString()))
+                    Console.WriteLine($"\nYou already guessed the letter '{letterGuess}'.");
+                    continue;
+                }
+
+                guessedLetters.Add(letterGuess);
+                bool containsLetter = randomWord.Contains(letterGuess);
+
+                if (containsLetter)
+                {
+                    Console.WriteLine($"\nThe letter '{letterGuess}' is in the word!");
+                    bool guessedWholeWord = true;
+                    foreach (char ch in randomWord)
                     {
-                        Console.Write(ch);
+                        if (guessedLetters.Contains(ch))
+                        {
+                            Console.Write(ch);
+                        }
+                        else
+                        {
+                            Console.Write("_");
+                            guessedWholeWord = false;
+                        }
                     }
-                    else
+                    Console.WriteLine();
+                    Console.WriteLine($"You have {GUESS_LIMIT - counter} guesses left.\n");
+
+                    if (guessedWholeWord)
                     {
-                        Console.Write("_");
-                        guessedWholeWord = false;
+                        Console.WriteLine("Congratulations! You guessed the whole word!");
+                        break;
                     }
                 }
-                Console.WriteLine();
-
-                if (guessedWholeWord)
+                else
                 {
-                    Console.WriteLine("Congratulations! You guessed the whole word!");
-                    return;
+                    Console.WriteLine($"\nThe letter '{letterGuess}' is not in the word.");
+                    Console.WriteLine($"You have {GUESS_LIMIT - counter} guesses left.\n");
                 }
+
+                counter++;
+            }
+
+            Console.WriteLine($"You guessed {counter} times.");
+            Console.WriteLine($"The word was: {randomWord}");
+
+            Console.WriteLine("Would you like to play again? Press Y/N");
+            char playAgain = Console.ReadKey().KeyChar;
+
+            if (playAgain == 'y')
+            {
+                guessedLetters.Clear();
+                Console.Clear();
             }
             else
             {
-                Console.WriteLine($"The letter '{letterGuess}' is not in the word.");
+                Console.WriteLine("\nThanks for playing!");
+                return;
             }
-
-            i++;
-        }
-
-        Console.WriteLine($"You guessed {i} times. GAME OVER.");
-        Console.WriteLine($"The word was: {randomWord}");
-        Console.WriteLine("Would you like to play again? Press Y/N");
-        string playAgain = Console.ReadLine().ToLower();
-
-        if (playAgain == "y")
-        {
-            Console.Clear();
-            Main(args);
-        }
-        else
-        {
-            Console.WriteLine("Thanks for playing!");
-            return;
         }
     }
 }
+
