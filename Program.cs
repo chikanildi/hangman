@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Internal;
 
 public class Hangman
 {
@@ -55,7 +56,7 @@ public class Hangman
                         }
                     }
                     Console.WriteLine();
-                    Console.WriteLine($"You have {GUESS_LIMIT - counter} guesses left.\n");
+
 
                     if (guessedWholeWord)
                     {
@@ -67,10 +68,9 @@ public class Hangman
                 {
                     counter++;
                     Console.WriteLine($"\nThe letter '{letterGuess}' is not in the word.");
-                    Console.WriteLine($"You have {GUESS_LIMIT - counter} guesses left.\n");
-
                 }
 
+                Console.WriteLine($"You have {GUESS_LIMIT - counter} guesses left.\n");
 
             }
 
