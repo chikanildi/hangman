@@ -65,11 +65,13 @@ public class Hangman
                 }
                 else
                 {
+                    counter++;
                     Console.WriteLine($"\nThe letter '{letterGuess}' is not in the word.");
                     Console.WriteLine($"You have {GUESS_LIMIT - counter} guesses left.\n");
+
                 }
 
-                counter++;
+
             }
 
             Console.WriteLine($"You guessed {counter} times.");
